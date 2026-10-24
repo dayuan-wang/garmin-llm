@@ -1,0 +1,19 @@
+{
+  "name": "garmin-local",
+  "interface": {
+    "displayName": "Garmin Local"
+  },
+  "plugins": [
+    {
+      "name": "garmin-learning",
+      "source": {
+        "source": "local",
+        "path": "./plugins/garmin-learning"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      }
+    }
+  ]
+}

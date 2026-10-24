@@ -1,0 +1,6 @@
+[project]
+name = "garmin-mcp-learning"
+version = "0.3.0"
+description = "Garmin Personal API MCP with health trends and a local training journal"
+requires-python = ">=3.10"
+dependencies = ["mcp==1.27.1", "python-dotenv==1.2.2", "pydantic==2.13.4"]

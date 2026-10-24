@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "garmin-learning",
+  "version": "0.3.0",
+  "description": "Independent JSON tools for Garmin health datasets and workout types, with local coaching analysis and dashboards.",
+  "author": {
+    "name": "Dayuan Wang"
+  },
+  "extensions": {
+    "com.openai": {
+      "requires_local_executor": true,
+      "interface": {
+        "displayName": "Garmin Learning",
+        "shortDescription": "Garmin health & workout tools",
+        "longDescription": "Read supported Garmin Personal API data, analyze health and training trends, keep a local gym journal, and generate dashboard snapshots. Requires this Mac and the existing Python environment.",
+        "developerName": "Dayuan Wang",
+        "capabilities": [],
+        "defaultPrompt": "列出 Garmin Learning 可读取的数据类型，然后根据我指定的日期分析睡眠和训练。"
+      }
+    }
+  }
+}

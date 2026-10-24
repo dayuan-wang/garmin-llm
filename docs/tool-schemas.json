@@ -1,0 +1,2970 @@
+{
+  "version": "0.3.0",
+  "transport": "stdio",
+  "description": "Built-in MCP JSON interfaces; account-discovered sport tools are added at runtime.",
+  "tools": [
+    {
+      "name": "get_steps",
+      "description": "Read steps for one YYYY-MM-DD date. Missing is not zero; demo is synthetic.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "get_stepsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_stepsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_data_types",
+      "description": "Discover supported Garmin endpoints and required arguments without accessing credentials.\n\n        Coverage is the documented API catalog, not a guarantee your account/device has data.\n        Single/range queries expose all response fields, including new fields Garmin may add.\n        ",
+      "inputSchema": {
+        "properties": {},
+        "title": "list_data_typesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "list_data_typesDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_garmin_data",
+      "description": "Read original JSON from any dataset in list_data_types.\n\n        Range endpoints accept <=31 inclusive days per call (steps/stress <=28).\n        Dedicated health tools automatically chunk longer ranges. Activities: limit 1–100,\n        advance start for subsequent pages. Use only data relevant to the user's request.\n        Errors are explicit; no_data does not mean zero or lack of permission.\n        ",
+      "inputSchema": {
+        "properties": {
+          "dataset": {
+            "title": "Dataset",
+            "type": "string"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Date"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "End Date"
+          },
+          "activity_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Activity Id"
+          },
+          "start": {
+            "default": 0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 50,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "activity_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Activity Type"
+          },
+          "today_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Today Date"
+          }
+        },
+        "required": [
+          "dataset"
+        ],
+        "title": "get_garmin_dataArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_garmin_dataDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_sleep",
+      "description": "Read detailed sleep, stages, naps and Garmin scores for a YYYY-MM-DD date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "get_sleepArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_sleepDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_heart_rate",
+      "description": "Read daily heart-rate measurements and resting heart rate for one date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "get_heart_rateArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_heart_rateDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_activities",
+      "description": "Read activities with automatic pagination, up to 1000 records / 366 days.\n\n        Inspect complete; if false, narrow dates or continue through get_garmin_data.\n        Examples of activity_type: running, cycling, strength_training; use Garmin type keys.\n        ",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "activity_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Activity Type"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "get_activitiesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_activitiesDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_activity",
+      "description": "Read one activity's full summary, metadata, measurements, splits and optionally workouts.\n\n        Use returned units and original data for per-session running/swimming/gym reviews.\n        ",
+      "inputSchema": {
+        "properties": {
+          "activity_id": {
+            "title": "Activity Id",
+            "type": "string"
+          },
+          "include_workouts": {
+            "default": true,
+            "title": "Include Workouts",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "activity_id"
+        ],
+        "title": "get_activityArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_activityDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "download_activity",
+      "description": "Download Garmin's original activity ZIP to private local storage, without extracting it.\n\n        For detailed analysis/export when JSON is insufficient. Max 32 MB. Does not modify Garmin.\n        Returns a local path and archive member names; no credential or binary content in chat.\n        ",
+      "inputSchema": {
+        "properties": {
+          "activity_id": {
+            "title": "Activity Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "activity_id"
+        ],
+        "title": "download_activityArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "download_activityDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_health_overview",
+      "description": "Integrated dashboard data for <=90 days: sleep, HR/HRV, steps, stress, Body Battery,\n        activities and local strength logs. Reports per-metric coverage and partial failures.\n        Sensitive optional datasets such as food and menstrual records require explicit raw queries.\n        ",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "get_health_overviewArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_health_overviewDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "analyze_training",
+      "description": "Descriptive health/training trends and recent 7-day vs preceding 7-day comparison.\n\n        Prefer >=14 days for comparison. No causality, injury prediction or readiness score.\n        Includes sport-specific duration/distance/pace and local strength progression.\n        ",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "analyze_trainingArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "analyze_trainingDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "log_workout",
+      "description": "Save USER-SUPPLIED workout notes/sets locally. One item per set; kg/lb explicit.\n\n        Reuse record_id on retries. replace=true explicitly corrects a record and preserves history.\n        Never invent weights/reps or silently add measured Garmin totals again. No Garmin writes.\n        ",
+      "inputSchema": {
+        "$defs": {
+          "ExerciseSet": {
+            "additionalProperties": false,
+            "properties": {
+              "exercise": {
+                "maxLength": 100,
+                "minLength": 1,
+                "title": "Exercise",
+                "type": "string"
+              },
+              "reps": {
+                "maximum": 1000,
+                "minimum": 1,
+                "title": "Reps",
+                "type": "integer"
+              },
+              "weight": {
+                "maximum": 2000,
+                "minimum": 0,
+                "title": "Weight",
+                "type": "number"
+              },
+              "unit": {
+                "default": "kg",
+                "enum": [
+                  "kg",
+                  "lb"
+                ],
+                "title": "Unit",
+                "type": "string"
+              },
+              "load_type": {
+                "default": "external",
+                "enum": [
+                  "external",
+                  "bodyweight",
+                  "assisted"
+                ],
+                "title": "Load Type",
+                "type": "string"
+              },
+              "rpe": {
+                "anyOf": [
+                  {
+                    "maximum": 10,
+                    "minimum": 1,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Rpe"
+              },
+              "notes": {
+                "default": "",
+                "maxLength": 1000,
+                "title": "Notes",
+                "type": "string"
+              }
+            },
+            "required": [
+              "exercise",
+              "reps",
+              "weight"
+            ],
+            "title": "ExerciseSet",
+            "type": "object"
+          },
+          "WorkoutLog": {
+            "additionalProperties": false,
+            "properties": {
+              "date": {
+                "title": "Date",
+                "type": "string"
+              },
+              "sport": {
+                "maxLength": 60,
+                "minLength": 1,
+                "title": "Sport",
+                "type": "string"
+              },
+              "activity_id": {
+                "anyOf": [
+                  {
+                    "pattern": "^[1-9][0-9]{0,19}$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Activity Id"
+              },
+              "duration_minutes": {
+                "anyOf": [
+                  {
+                    "exclusiveMinimum": 0,
+                    "maximum": 2880,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Duration Minutes"
+              },
+              "session_rpe": {
+                "anyOf": [
+                  {
+                    "maximum": 10,
+                    "minimum": 1,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Session Rpe"
+              },
+              "sets": {
+                "items": {
+                  "$ref": "#/$defs/ExerciseSet"
+                },
+                "maxItems": 300,
+                "title": "Sets",
+                "type": "array"
+              },
+              "notes": {
+                "default": "",
+                "maxLength": 5000,
+                "title": "Notes",
+                "type": "string"
+              }
+            },
+            "required": [
+              "date",
+              "sport"
+            ],
+            "title": "WorkoutLog",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "record_id": {
+            "title": "Record Id",
+            "type": "string"
+          },
+          "workout": {
+            "$ref": "#/$defs/WorkoutLog"
+          },
+          "replace": {
+            "default": false,
+            "title": "Replace",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "record_id",
+          "workout"
+        ],
+        "title": "log_workoutArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "log_workoutDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_workout_logs",
+      "description": "Read user-entered workout sets and notes by inclusive dates, independently of Garmin.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "list_workout_logsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "list_workout_logsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "analyze_strength_progress",
+      "description": "Compare recorded sets, reps, kg loads and volume by exercise; keep assisted loads separate.\n\n        Estimated 1RM is an explicitly labeled Epley estimate for external-load sets <=10 reps.\n        ",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "exercise": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Exercise"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "analyze_strength_progressArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "analyze_strength_progressDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "save_coach_profile",
+      "description": "Persist user-stated goals, availability, equipment, limitations and timezone locally.\n        Requires replace=true to change an existing profile; do not infer or invent profile details.\n        ",
+      "inputSchema": {
+        "$defs": {
+          "CoachProfile": {
+            "additionalProperties": false,
+            "properties": {
+              "timezone": {
+                "default": "America/New_York",
+                "title": "Timezone",
+                "type": "string"
+              },
+              "goals": {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "title": "Goals",
+                "type": "array"
+              },
+              "available_days": {
+                "items": {
+                  "enum": [
+                    "Mon",
+                    "Tue",
+                    "Wed",
+                    "Thu",
+                    "Fri",
+                    "Sat",
+                    "Sun"
+                  ],
+                  "type": "string"
+                },
+                "maxItems": 7,
+                "title": "Available Days",
+                "type": "array"
+              },
+              "minutes_per_session": {
+                "anyOf": [
+                  {
+                    "maximum": 600,
+                    "minimum": 5,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Minutes Per Session"
+              },
+              "equipment": {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 50,
+                "title": "Equipment",
+                "type": "array"
+              },
+              "experience": {
+                "default": "",
+                "maxLength": 2000,
+                "title": "Experience",
+                "type": "string"
+              },
+              "limitations": {
+                "default": "",
+                "maxLength": 2000,
+                "title": "Limitations",
+                "type": "string"
+              },
+              "preferences": {
+                "default": "",
+                "maxLength": 2000,
+                "title": "Preferences",
+                "type": "string"
+              }
+            },
+            "title": "CoachProfile",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "profile": {
+            "$ref": "#/$defs/CoachProfile"
+          },
+          "replace": {
+            "default": false,
+            "title": "Replace",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "profile"
+        ],
+        "title": "save_coach_profileArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "save_coach_profileDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_coach_profile",
+      "description": "Read the user's saved coaching preferences; empty means not provided.",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_coach_profileArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_coach_profileDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "prepare_coaching_context",
+      "description": "Gather evidence and preferences for the LLM to draft a personalized running/fitness plan.\n\n        Use 28–90 recent days when available. This returns evidence, not an automatically prescribed plan.\n        Ask for missing preferences, explain adjustments and uncertainty, then optionally save the draft.\n        ",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "prepare_coaching_contextArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "prepare_coaching_contextDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "save_training_plan",
+      "description": "Save a requested LLM-authored plan and its evidence window locally; default status is draft.\n        Does not send workouts to Garmin, schedule reminders or mark sessions completed.\n        ",
+      "inputSchema": {
+        "$defs": {
+          "PlanSession": {
+            "additionalProperties": false,
+            "properties": {
+              "date": {
+                "title": "Date",
+                "type": "string"
+              },
+              "sport": {
+                "maxLength": 60,
+                "minLength": 1,
+                "title": "Sport",
+                "type": "string"
+              },
+              "duration_minutes": {
+                "maximum": 600,
+                "minimum": 0,
+                "title": "Duration Minutes",
+                "type": "integer"
+              },
+              "description": {
+                "maxLength": 4000,
+                "minLength": 1,
+                "title": "Description",
+                "type": "string"
+              }
+            },
+            "required": [
+              "date",
+              "sport",
+              "duration_minutes",
+              "description"
+            ],
+            "title": "PlanSession",
+            "type": "object"
+          },
+          "TrainingPlan": {
+            "additionalProperties": false,
+            "properties": {
+              "goal": {
+                "maxLength": 1000,
+                "minLength": 1,
+                "title": "Goal",
+                "type": "string"
+              },
+              "rationale": {
+                "maxLength": 6000,
+                "minLength": 1,
+                "title": "Rationale",
+                "type": "string"
+              },
+              "evidence_start": {
+                "title": "Evidence Start",
+                "type": "string"
+              },
+              "evidence_end": {
+                "title": "Evidence End",
+                "type": "string"
+              },
+              "sessions": {
+                "items": {
+                  "$ref": "#/$defs/PlanSession"
+                },
+                "maxItems": 120,
+                "minItems": 1,
+                "title": "Sessions",
+                "type": "array"
+              },
+              "status": {
+                "default": "draft",
+                "enum": [
+                  "draft",
+                  "accepted"
+                ],
+                "title": "Status",
+                "type": "string"
+              },
+              "assumptions": {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 30,
+                "title": "Assumptions",
+                "type": "array"
+              }
+            },
+            "required": [
+              "goal",
+              "rationale",
+              "evidence_start",
+              "evidence_end",
+              "sessions"
+            ],
+            "title": "TrainingPlan",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "record_id": {
+            "title": "Record Id",
+            "type": "string"
+          },
+          "plan": {
+            "$ref": "#/$defs/TrainingPlan"
+          },
+          "replace": {
+            "default": false,
+            "title": "Replace",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "record_id",
+          "plan"
+        ],
+        "title": "save_training_planArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "save_training_planDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_training_plans",
+      "description": "Read saved local training plans and their rationale, status, sessions and assumptions.",
+      "inputSchema": {
+        "properties": {},
+        "title": "list_training_plansArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "list_training_plansDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "create_dashboard",
+      "description": "Create a private local HTML dashboard and JSON snapshot for <=90 days.\n        Includes trends, sport totals, coverage and workout notes. Files are not published.\n        ",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "create_dashboardArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "create_dashboardDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_activity_workouts",
+      "description": "Read structured workout steps associated with one completed Garmin activity as JSON.",
+      "inputSchema": {
+        "properties": {
+          "activity_id": {
+            "title": "Activity Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "activity_id"
+        ],
+        "title": "get_activity_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "get_activity_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_steps_history",
+      "description": "Daily steps, distance and goals; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_stress",
+      "description": "Daily stress; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_hydration",
+      "description": "Hydration; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_weight_goals",
+      "description": "Effective weight goals; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_weight",
+      "description": "Weight and body composition summaries; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_weight_entries",
+      "description": "All weight entries; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_sleep_summaries",
+      "description": "Sleep duration, stages, scores and naps; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_body_battery",
+      "description": "Body Battery reports; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_daily_summaries",
+      "description": "Steps, calories, heart rate, stress, respiration, SpO2 and intensity minutes; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_hrv_summaries",
+      "description": "HRV daily summaries and baseline; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_wellness_activities",
+      "description": "Wellness activity summaries; original Garmin JSON. Inclusive YYYY-MM-DD dates, at most 366 days; automatically split into bounded requests. Check complete and partial errors.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_daily_summary",
+      "description": "Daily wellness summary; original Garmin JSON. Provide a YYYY-MM-DD date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_hrv",
+      "description": "Detailed HRV; original Garmin JSON. Provide a YYYY-MM-DD date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_food_logs",
+      "description": "Food and nutrition logs; original Garmin JSON. Provide a YYYY-MM-DD date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_spo2",
+      "description": "Blood oxygen and acclimation; original Garmin JSON. Provide a YYYY-MM-DD date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_fitness_age",
+      "description": "Garmin fitness age; original Garmin JSON. Provide a YYYY-MM-DD date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_menstrual_summary",
+      "description": "Menstrual cycle summary; only request when relevant; original Garmin JSON. Provide a YYYY-MM-DD date.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_menstrual_day",
+      "description": "Detailed menstrual day view; requires today_date; original Garmin JSON. Provide both date and today_date as YYYY-MM-DD; query only when relevant to the user.",
+      "inputSchema": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "today_date": {
+            "title": "Today Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "today_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_profile",
+      "description": "Garmin profile settings; original Garmin JSON. No date parameters.",
+      "inputSchema": {
+        "properties": {},
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_heart_rate_zones",
+      "description": "Configured heart-rate zones; original Garmin JSON. No date parameters.",
+      "inputSchema": {
+        "properties": {},
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_respiration",
+      "description": "Read daily respiration as JSON over inclusive YYYY-MM-DD dates (<=366 days). Projects the original respiration object from daily_summaries, preserving Garmin units and nulls. This is a filtered view of the documented daily-summary endpoint, not a separate Garmin API route.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_calories",
+      "description": "Read daily calories as JSON over inclusive YYYY-MM-DD dates (<=366 days). Projects the original calories object from daily_summaries, preserving Garmin units and nulls. This is a filtered view of the documented daily-summary endpoint, not a separate Garmin API route.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_intensity_minutes",
+      "description": "Read daily intensity minutes as JSON over inclusive YYYY-MM-DD dates (<=366 days). Projects the original intensityMinutes object from daily_summaries, preserving Garmin units and nulls. This is a filtered view of the documented daily-summary endpoint, not a separate Garmin API route.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_movement",
+      "description": "Read daily movement as JSON over inclusive YYYY-MM-DD dates (<=366 days). Projects the original movement object from daily_summaries, preserving Garmin units and nulls. This is a filtered view of the documented daily-summary endpoint, not a separate Garmin API route.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_heart_rate_summary",
+      "description": "Read daily heart rate summary as JSON over inclusive YYYY-MM-DD dates (<=366 days). Projects the original heartRate object from daily_summaries, preserving Garmin units and nulls. This is a filtered view of the documented daily-summary endpoint, not a separate Garmin API route.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "readArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "readDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_basketball_workouts",
+      "description": "Read basketball activity records as JSON. Exact Garmin activityType.typeKey=basketball; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_bouldering_workouts",
+      "description": "Read bouldering activity records as JSON. Exact Garmin activityType.typeKey=bouldering; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_cycling_workouts",
+      "description": "Read cycling activity records as JSON. Exact Garmin activityType.typeKey=cycling; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_elliptical_workouts",
+      "description": "Read elliptical activity records as JSON. Exact Garmin activityType.typeKey=elliptical; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_gravel_cycling_workouts",
+      "description": "Read gravel cycling activity records as JSON. Exact Garmin activityType.typeKey=gravel_cycling; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_hiit_workouts",
+      "description": "Read hiit activity records as JSON. Exact Garmin activityType.typeKey=hiit; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_hiking_workouts",
+      "description": "Read hiking activity records as JSON. Exact Garmin activityType.typeKey=hiking; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_indoor_cardio_workouts",
+      "description": "Read indoor cardio activity records as JSON. Exact Garmin activityType.typeKey=indoor_cardio; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_indoor_cycling_workouts",
+      "description": "Read indoor cycling activity records as JSON. Exact Garmin activityType.typeKey=indoor_cycling; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_indoor_rowing_workouts",
+      "description": "Read indoor rowing activity records as JSON. Exact Garmin activityType.typeKey=indoor_rowing; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_kayaking_workouts",
+      "description": "Read kayaking activity records as JSON. Exact Garmin activityType.typeKey=kayaking; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_lap_swimming_workouts",
+      "description": "Read lap swimming activity records as JSON. Exact Garmin activityType.typeKey=lap_swimming; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_mountain_biking_workouts",
+      "description": "Read mountain biking activity records as JSON. Exact Garmin activityType.typeKey=mountain_biking; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_open_water_swimming_workouts",
+      "description": "Read open water swimming activity records as JSON. Exact Garmin activityType.typeKey=open_water_swimming; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_pilates_workouts",
+      "description": "Read pilates activity records as JSON. Exact Garmin activityType.typeKey=pilates; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_rock_climbing_workouts",
+      "description": "Read rock climbing activity records as JSON. Exact Garmin activityType.typeKey=rock_climbing; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_rowing_workouts",
+      "description": "Read rowing activity records as JSON. Exact Garmin activityType.typeKey=rowing; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_running_workouts",
+      "description": "Read running activity records as JSON. Exact Garmin activityType.typeKey=running; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_skiing_workouts",
+      "description": "Read skiing activity records as JSON. Exact Garmin activityType.typeKey=skiing; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_snowboarding_workouts",
+      "description": "Read snowboarding activity records as JSON. Exact Garmin activityType.typeKey=snowboarding; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_stair_climbing_workouts",
+      "description": "Read stair climbing activity records as JSON. Exact Garmin activityType.typeKey=stair_climbing; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_stand_up_paddleboarding_workouts",
+      "description": "Read stand up paddleboarding activity records as JSON. Exact Garmin activityType.typeKey=stand_up_paddleboarding; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_strength_training_workouts",
+      "description": "Read strength training activity records as JSON. Exact Garmin activityType.typeKey=strength_training; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_tennis_workouts",
+      "description": "Read tennis activity records as JSON. Exact Garmin activityType.typeKey=tennis; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_track_running_workouts",
+      "description": "Read track running activity records as JSON. Exact Garmin activityType.typeKey=track_running; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_trail_running_workouts",
+      "description": "Read trail running activity records as JSON. Exact Garmin activityType.typeKey=trail_running; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_treadmill_running_workouts",
+      "description": "Read treadmill running activity records as JSON. Exact Garmin activityType.typeKey=treadmill_running; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_virtual_ride_workouts",
+      "description": "Read virtual ride activity records as JSON. Exact Garmin activityType.typeKey=virtual_ride; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_virtual_run_workouts",
+      "description": "Read virtual run activity records as JSON. Exact Garmin activityType.typeKey=virtual_run; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_walking_workouts",
+      "description": "Read walking activity records as JSON. Exact Garmin activityType.typeKey=walking; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_yoga_workouts",
+      "description": "Read yoga activity records as JSON. Exact Garmin activityType.typeKey=yoga; child types are separate tools. Inclusive YYYY-MM-DD dates, at most 366 days; max_records 1–1000. Check complete before treating the result as all history. Raw records preserve sport-specific fields. An empty result does not prove no exercise.",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 500,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "read_workoutsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "read_workoutsDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_workout_types",
+      "description": "List separately callable sport tools without network or credentials.\n        Built-in filters are not an exhaustive Garmin taxonomy or evidence of account data.\n        Use discover_workout_types to add sports observed in your history.\n        ",
+      "inputSchema": {
+        "properties": {},
+        "title": "list_workout_typesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "list_workout_typesDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "discover_workout_types",
+      "description": "Discover sport types in <=366 days of activities and add independent JSON tools.\n        Persist only valid type keys locally for future sessions. No Garmin writes.\n        max_records <=1000; inspect complete. New tools may require client reconnection.\n        Demo registers synthetic types in memory only and never writes the journal.\n        ",
+      "inputSchema": {
+        "properties": {
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "max_records": {
+            "default": 1000,
+            "title": "Max Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "discover_workout_typesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "title": "discover_workout_typesDictOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "garmin-learning": {
+      "type": "stdio",
+      "command": "./scripts/start-garmin",
+      "args": []
+    }
+  }
+}

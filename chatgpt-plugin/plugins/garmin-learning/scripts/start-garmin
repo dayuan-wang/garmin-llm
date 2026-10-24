@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PLUGIN_DIR=$(dirname -- "$SCRIPT_DIR")
+if [ -n "${GARMIN_MCP_PROJECT:-}" ]; then
+    PROJECT_DIR=$GARMIN_MCP_PROJECT
+elif [ -f "$PLUGIN_DIR/.project-path" ]; then
+    IFS= read -r PROJECT_DIR < "$PLUGIN_DIR/.project-path"
+else
+    PROJECT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/../../../.." && pwd)
+fi
+if [ ! -f "$PROJECT_DIR/garmin_mcp/server.py" ]; then
+    printf '%s\n' 'Garmin project not found. Run examples/configure_plugin.py in your checkout before installing the plugin.' >&2
+    exit 1
+fi
+cd "$PROJECT_DIR"
+export PYTHONPATH="$PROJECT_DIR${PYTHONPATH:+:$PYTHONPATH}"
+exec "${GARMIN_MCP_PYTHON:-$PROJECT_DIR/.venv/bin/python}" -m garmin_mcp "$@"
